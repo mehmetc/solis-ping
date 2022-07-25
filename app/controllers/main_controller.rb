@@ -11,7 +11,7 @@ class MainController < GenericController
       result[k] = service_alive?(k)
     end
 
-    status 500 if result.flatten.select{|s| s.is_a?(Hash)}.map{|m| m.values}.flatten.include?(false)
+    # status 500 if result.flatten.select{|s| s.is_a?(Hash)}.map{|m| m.values}.flatten.include?(false)
 
     result.to_json
   end
