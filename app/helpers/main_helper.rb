@@ -20,8 +20,8 @@ module Sinatra
     def service_alive?(k)
       alive = {}
       result = HTTP.timeout(3).get("#{ConfigFile[:services][k][:host]}#{ConfigFile[:services][k][:base_path]}")
-      api = result.body.to_s.length > 0 ? true : false
-      alive['api'] = api if result.status == 200
+      api = result.body.to_s.length > 0 && (result.status < 400 || result.status > 499) ? true : false
+      alive['api'] = api
 
       result = HTTP.post("#{ConfigFile[:services][k][:host]}/_sparql", form: { query: 'ask where{?s ?p ?o}' })
       storage = result.body.to_s =~ /TRUE \.$/ ? true : false
