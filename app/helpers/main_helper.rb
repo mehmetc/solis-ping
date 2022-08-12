@@ -19,7 +19,7 @@ module Sinatra
 
     def service_alive?(k)
       alive = {}
-      result = HTTP.timeout(3).get("#{ConfigFile[:services][k][:host]}#{ConfigFile[:services][k][:base_path]}")
+      result = HTTP.timeout(3).get("#{ConfigFile[:services][k][:host]}#{ConfigFile[:services][k][:base_path]}/ping")
       api = result.body.to_s.length > 0 && (result.status < 500 || result.status > 599) ? true : false
       alive['api'] = api
 
