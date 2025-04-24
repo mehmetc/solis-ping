@@ -1,26 +1,23 @@
-FROM ruby:2.7.4
+FROM registry.docker.libis.be/solis/base:latest
 
-RUN bundle config --global frozen 1
-RUN useradd abv -u 10000 -m -d /app
+ARG VERSION=$VERSION
+ARG SERVICE=$SERVICE
 
 WORKDIR /app
-COPY Gemfile Gemfile
+USER root
 
 COPY app app
 COPY lib lib
-COPY config config
+#COPY public public
 COPY config.ru config.ru
-COPY run.sh run.sh
 
-RUN chown -R abv:abv /app
-USER abv:abv
-RUN bundle install
-RUN gem cleanup minitest
+RUN chown -R solis:solis /app
 
-EXPOSE 9292
-#DEBUG PORT
-EXPOSE 1234:1234
-EXPOSE 26162:26162
+USER solis:solis
 
-ENV LANG C.UTF-8
-CMD /app/run.sh
+# Metadata
+LABEL org.opencontainers.image.vendor="KULeuven/LIBIS" \
+	org.opencontainers.image.url="https://www.libis.be" \
+	org.opencontainers.image.title="SOLIS $SERVICE image" \
+	org.opencontainers.image.description="SOLIS $SERVICE image" \
+	org.opencontainers.image.version="$VERSION"
